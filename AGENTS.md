@@ -76,25 +76,62 @@ fix: 노트 목록 기능에서 데이터가 비어 있을 때 오류가 발생�
 ## 3. 브랜치 컨벤션 (git flow 간소화)
 
 ```
-main      # 배포 브랜치. 직접 커밋 금지
-develop   # 개발 통합 브랜치. 직접 커밋 금지
+main      # 배포 브랜치 (Vercel 프로덕션). 직접 push 금지, PR 로만 변경
+develop   # 개발 통합 브랜치 (GitHub 기본 브랜치). 직접 push 금지, PR 로만 변경
 feature/* # develop 에서 파생, 작업 후 develop 으로 PR 병합
 ```
 
 - 브랜치 이름: `feature/<기능-요약>` (영문 소문자 + 하이픈). 예) `feature/note-list`
 - 흐름: `develop` → `feature/*` 작업 → PR → `develop` 병합 → 배포 시점에 `develop` → `main` PR
 - `release/*`, `hotfix/*` 브랜치는 필요해질 때 도입한다. (현재는 사용하지 않음)
+- 브랜치 보호 룰: 생성/삭제 제한, PR 필수(승인 0명, 대화 해결 필수), force push 차단.
+  따라서 AI 도 `main`, `develop` 에 직접 push 하지 말고 반드시 feature 브랜치에서 PR 로 반영한다.
+
+### 병합 방식
+
+| PR 방향                 | 병합 방식            | 이유                                                                                         |
+| ----------------------- | -------------------- | -------------------------------------------------------------------------------------------- |
+| `feature/*` → `develop` | **Squash and merge** | 기능 하나가 커밋 하나로 남는다. PR 제목이 커밋 메시지가 되므로 컨벤션을 지켜야 한다.         |
+| `develop` → `main`      | **Merge commit**     | squash 하면 두 브랜치 히스토리가 갈라져 다음 배포 PR 에서 충돌이 반복되므로 사용하지 않는다. |
 
 ## 4. PR 컨벤션
 
-- 제목은 커밋 컨벤션과 같은 형식: `타입: 한글 설명`
+- 제목은 커밋 컨벤션과 같은 형식: `타입: 한글 설명` (Squash 병합 시 이 제목이 그대로 커밋 메시지가 된다)
 - 대상 브랜치: feature → `develop`, 배포 시 `develop` → `main`
 - 본문은 `.github/PULL_REQUEST_TEMPLATE.md` 양식을 따른다. (변경 배경, 변경 내용, 확인 방법, 체크리스트)
-- 병합 전 `npm run lint`, `npm run typecheck`, `npm run build` 가 통과해야 한다.
+- PR 을 올리기 전에 로컬에서 `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` 를 확인한다.
 
-## 5. 코드 작성 규칙
+## 5. CI / 배포
+
+- 검증은 **PR 단계(CI)에서 모두 끝낸다.** 배포(Vercel)는 검증이 끝난 코드를 배포만 한다.
+- `develop`, `main` 으로 향하는 모든 PR 에서 `.github/workflows/ci.yml` 이 아래 항목을 병렬로 실행한다.
+
+| 검사              | 명령                      | 내용                                               |
+| ----------------- | ------------------------- | -------------------------------------------------- |
+| 커밋/PR 제목 규칙 | `commitlint`              | PR 의 모든 커밋과 PR 제목이 컨벤션을 지키는지 검사 |
+| ESLint            | `npm run lint`            | 코드 규칙과 폴더 의존 방향 규칙 검사               |
+| 타입 검사         | `npm run typecheck`       | TypeScript 오류 검사                               |
+| 포맷              | `npm run format:check`    | Prettier 포맷 검사                                 |
+| 테스트            | `npm test`                | Vitest + Storybook 스토리 테스트 (Chromium)        |
+| 빌드              | `npm run build`           | Next.js 프로덕션 빌드                              |
+| Storybook 빌드    | `npm run build-storybook` | Storybook 빌드                                     |
+
+- 브랜치 룰의 **Require status checks to pass** 에는 `CI 통과`(`ci-success` job) 하나만 등록한다.
+  검사 항목을 추가해도 룰을 고칠 필요가 없고, 하나라도 실패하면 병합이 막힌다.
+- 검사 항목을 추가하거나 바꾸면 `ci.yml` 의 `ci-success` job 의 `needs` 에도 반영한다.
+- Vercel 연동 후 **Require deployments to succeed** 를 켜면 프리뷰 배포 성공도 병합 조건이 된다.
+- 로컬 husky 훅은 `--no-verify` 로 우회할 수 있으므로, CI 가 최종 방어선이다. 훅을 우회하지 않는다.
+
+## 6. 개발 환경
+
+- Node 는 **24.x** 로 고정한다. (`.nvmrc`, `package.json` 의 `engines`) Vercel 과 CI 도 이 버전을 따른다.
+- nvm 사용 시 프로젝트 폴더에서 `nvm install` 후 `nvm use` 를 실행한다.
+- 패키지 매니저는 npm 이다. 의존성은 `package-lock.json` 을 기준으로 `npm ci` 로 설치한다.
+
+## 7. 코드 작성 규칙
 
 - 언어는 TypeScript, 스타일은 SCSS Modules(`*.module.scss`)를 사용한다.
 - 서버 상태(API 데이터)는 `@tanstack/react-query` 로 관리한다. 쿼리 키는 feature 안에서 한 곳에 모아 정의한다.
-- 새 공용 컴포넌트는 Storybook 스토리를 함께 작성한다.
+- 새 공용 컴포넌트는 Storybook 스토리를 함께 작성한다. 스토리는 `npm test` 에서 자동 테스트된다.
+- 로직(훅, 유틸)을 추가하면 가능한 한 테스트도 함께 작성한다. CI 의 테스트를 통과해야 병합할 수 있다.
 - 환경변수는 `.env.example` 에 이름만 추가하고, 실제 값은 `.env.local` 에 둔다. 비밀 값은 절대 커밋하지 않는다.

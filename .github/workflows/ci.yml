@@ -1,0 +1,138 @@
+name: CI
+
+# develop, main 으로 향하는 모든 PR 을 검증한다.
+# 배포(Vercel)는 이 검증이 끝난 코드만 받도록 하고, 배포 단계에서는 별도 검증을 하지 않는다.
+on:
+  pull_request:
+    branches: [develop, main]
+
+# 같은 PR 에 새 커밋이 올라오면 이전 실행은 취소한다.
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  commitlint:
+    name: 커밋/PR 제목 규칙
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      # PR 에 포함된 모든 커밋 메시지를 검사한다. (husky 우회 방지)
+      - name: 커밋 메시지 검사
+        run: >
+          npx commitlint
+          --from ${{ github.event.pull_request.base.sha }}
+          --to ${{ github.event.pull_request.head.sha }}
+          --verbose
+      # Squash and merge 는 PR 제목이 그대로 커밋 메시지가 되므로 제목도 검사한다.
+      - name: PR 제목 검사
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: printf '%s\n' "$PR_TITLE" | npx commitlint --verbose
+
+  lint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+
+  typecheck:
+    name: 타입 검사
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+
+  format:
+    name: Prettier 포맷
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+
+  test:
+    name: 테스트
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      # Storybook 테스트가 실제 브라우저(Chromium)에서 실행된다.
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+
+  build:
+    name: Next.js 빌드
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+
+  build-storybook:
+    name: Storybook 빌드
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build-storybook
+
+  # 브랜치 룰의 "Require status checks" 에는 이 job 하나만 등록하면 된다.
+  # 검사 항목이 늘어도 룰을 수정할 필요가 없고, 하나라도 실패/취소되면 병합이 막힌다.
+  ci-success:
+    name: CI 통과
+    if: always()
+    needs:
+      - commitlint
+      - lint
+      - typecheck
+      - format
+      - test
+      - build
+      - build-storybook
+    runs-on: ubuntu-latest
+    steps:
+      - name: 모든 검사 통과 여부 확인
+        run: |
+          if [ "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped') }}" = "true" ]; then
+            echo "실패하거나 건너뛴 검사가 있습니다."
+            exit 1
+          fi
+          echo "모든 검사를 통과했습니다."
