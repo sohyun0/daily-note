@@ -14,9 +14,25 @@ const eslintConfig = defineConfig([
     ".next/**",
     "out/**",
     "build/**",
+    "storybook-static/**",
     "next-env.d.ts",
   ]),
   ...storybook.configs["flat/recommended"],
+  // TypeScript 컨벤션 규칙 (any 금지, 타입 import 시 import type 강제)
+  {
+    files: ["src/**/*.{ts,tsx}"],
+    ignores: ["src/stories/**"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "error",
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        {
+          prefer: "type-imports",
+          fixStyle: "separate-type-imports",
+        },
+      ],
+    },
+  },
   // 폴더 경계 규칙 (FSD 핵심 규칙 차용)
   // features 끼리는 서로 import 하지 않는다. 공용 코드는 shared 로 올린다.
   // 같은 feature 내부는 상대 경로(./, ../)로 import 한다.
