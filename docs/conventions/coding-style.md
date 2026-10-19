@@ -101,9 +101,10 @@ export default function NoteList({ notes, isLoading }: NoteListProps) {
   if (isEligible) { ... }
   ```
 
-## 5. Import 순서
+## 5. Import 순서 (`eslint-plugin-simple-import-sort` 자동 정렬)
 
-그룹 사이에 빈 줄을 두고 아래 순서를 지킨다.
+그룹 사이에 빈 줄을 두고 아래 5단계 순서를 지킨다.
+에디터 저장(`Ctrl+S` / `Cmd+S`) 및 커밋(`lint-staged`) 시 `eslint --fix`가 자동으로 이 순서대로 정렬한다.
 
 1. **React / Next.js** (`react`, `next/*`)
 2. **외부 라이브러리** (`@tanstack/*`, `zustand`, `zod`, `axios` 등)

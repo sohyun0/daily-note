@@ -1,4 +1,5 @@
 // For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
+import simpleImportSort from "eslint-plugin-simple-import-sort";
 import storybook from "eslint-plugin-storybook";
 
 import { defineConfig, globalIgnores } from "eslint/config";
@@ -18,10 +19,13 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
   ]),
   ...storybook.configs["flat/recommended"],
-  // TypeScript 컨벤션 규칙 (any 금지, 타입 import 시 import type 강제)
+  // TypeScript 컨벤션 및 5단계 Import 자동 정렬 규칙
   {
     files: ["src/**/*.{ts,tsx}"],
     ignores: ["src/stories/**"],
+    plugins: {
+      "simple-import-sort": simpleImportSort,
+    },
     rules: {
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/consistent-type-imports": [
@@ -29,6 +33,24 @@ const eslintConfig = defineConfig([
         {
           prefer: "type-imports",
           fixStyle: "separate-type-imports",
+        },
+      ],
+      "simple-import-sort/exports": "error",
+      "simple-import-sort/imports": [
+        "error",
+        {
+          groups: [
+            // 1. React / Next.js (타입 import 제외)
+            ["^(react|next)(/.*)?(?<!\\u0000)$"],
+            // 2. 외부 라이브러리 (node:, @패키지, 일반 패키지 - 타입 import 제외)
+            ["^(node:)?@?\\w.*(?<!\\u0000)$"],
+            // 3. 내부 모듈 (@/... - 타입 import 제외)
+            ["^@/.*(?<!\\u0000)$"],
+            // 4. 상대 경로 (./, ../) 및 스타일/사이드이펙트 import (타입 import 제외)
+            ["^\\u0000", "^\\..*(?<!\\u0000)$"],
+            // 5. 타입 import (import type ...)
+            ["\\u0000$"],
+          ],
         },
       ],
     },

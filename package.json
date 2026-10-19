@@ -48,6 +48,7 @@
     "@vitest/coverage-v8": "^4",
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
     "eslint-plugin-storybook": "^10.6.2",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
