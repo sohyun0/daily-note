@@ -16,7 +16,48 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
-  ...storybook.configs["flat/recommended"]
+  ...storybook.configs["flat/recommended"],
+  // 폴더 경계 규칙 (FSD 핵심 규칙 차용)
+  // features 끼리는 서로 import 하지 않는다. 공용 코드는 shared 로 올린다.
+  // 같은 feature 내부는 상대 경로(./, ../)로 import 한다.
+  {
+    files: ["src/features/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@/features/*", "@/features/**"],
+              message:
+                "features 끼리는 import 할 수 없습니다. 공용 코드는 src/shared 로 옮기고, 같은 feature 안에서는 상대 경로를 사용하세요.",
+            },
+            {
+              group: ["@/app/*", "@/app/**"],
+              message: "features 는 app 계층을 import 할 수 없습니다.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  // shared 는 가장 하위 계층이므로 features / app 을 import 할 수 없다.
+  {
+    files: ["src/shared/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@/features/*", "@/features/**", "@/app/*", "@/app/**"],
+              message: "shared 는 features, app 을 import 할 수 없습니다.",
+            },
+          ],
+        },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;
