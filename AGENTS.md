@@ -36,4 +36,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 - **Node.js**: `24.x` 고정 (`.nvmrc`, `package.json` `engines`)
 - **패키지 매니저**: `npm` (`npm ci` 기준)
+- **주요 라이브러리**:
+  - 서버 상태: `@tanstack/react-query` + `@tanstack/react-query-devtools`
+  - 클라이언트 전역 상태: `zustand`
+  - 폼 & 스키마 검증: `react-hook-form` + `zod` + `@hookform/resolvers`
+  - 스타일 / 유틸: `sass` (SCSS Modules), `clsx`, `dayjs`, `lucide-react`
 - **필수 로컬 검증 명령**: `npm run lint`, `npm run typecheck`, `npm run format:check`, `npm test`, `npm run build`
