@@ -5,6 +5,7 @@ name: CI
 on:
   pull_request:
     branches: [develop, main]
+    types: [opened, synchronize, reopened, edited]
   # 초기 설정 검증과 CI 상태 검사 등록을 위해 GitHub Actions 화면에서 수동 실행할 수 있다.
   workflow_dispatch:
 
