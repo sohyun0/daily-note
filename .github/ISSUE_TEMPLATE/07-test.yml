@@ -1,0 +1,28 @@
+name: "✅ 테스트 추가 / 보강 (test)"
+description: "Vitest 단위/통합 테스트나 Storybook 인터랙션 테스트를 추가할 때 사용합니다."
+title: "[TEST] "
+labels: ["✅ test"]
+body:
+  - type: textarea
+    id: target
+    attributes:
+      label: "🧪 테스트 대상"
+      description: "테스트를 작성할 컴포넌트, 커스텀 훅, 유틸리티 함수 등을 적어 주세요."
+    validations:
+      required: true
+
+  - type: textarea
+    id: scenarios
+    attributes:
+      label: "📋 테스트 시나리오"
+      value: |
+        - [ ] 정상 동작 케이스
+        - [ ] 예외 / 엣지 케이스
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        🌿 **작업 브랜치 예시**: `test/#이슈번호-작업설명`

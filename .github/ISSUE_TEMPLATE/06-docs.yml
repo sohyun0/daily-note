@@ -1,0 +1,28 @@
+name: "📝 문서 작업 (docs)"
+description: "README, AGENTS.md, 컨벤션 문서, 가이드 문서를 추가하거나 수정할 때 사용합니다."
+title: "[DOCS] "
+labels: ["📝 docs"]
+body:
+  - type: textarea
+    id: target
+    attributes:
+      label: "📄 문서화 대상"
+      description: "어떤 문서를 추가하거나 수정하는지 적어 주세요."
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: "✏️ 주요 작성 / 변경 내용"
+      value: |
+        - [ ] 
+        - [ ]
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        🌿 **작업 브랜치 예시**: `docs/#이슈번호-작업설명`

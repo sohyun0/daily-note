@@ -38,6 +38,7 @@ const config = {
       [
         "feat",
         "fix",
+        "ui",
         "docs",
         "style",
         "refactor",
@@ -46,6 +47,8 @@ const config = {
         "chore",
         "build",
         "ci",
+        "asset",
+        "deploy",
         "revert",
       ],
     ],

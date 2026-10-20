@@ -1,0 +1,37 @@
+name: "💄 UI / 디자인 (ui)"
+description: "퍼블리싱, SCSS 스타일링, 반응형 대응, Storybook 컴포넌트 UI 작업 시 사용합니다."
+title: "[UI] "
+labels: ["💄 ui"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: "🎨 작업 개요"
+      description: "어떤 화면 또는 공통 컴포넌트의 UI/스타일 작업인지 설명해 주세요."
+      placeholder: "예) 공통 Button 컴포넌트 및 Storybook 스토리를 구현합니다."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "📐 디자인 및 퍼블리싱 체크리스트"
+      description: "해당하는 작업 범위를 체크해 주세요."
+      options:
+        - label: "Figma 시안 반영 (레이아웃, 여백, 타이포그래피, 컬러)"
+        - label: "반응형 / 모바일 화면 대응"
+        - label: "상태별 UI 구현 (Default / Hover / Disabled / Loading / Empty / Error)"
+        - label: "공용 컴포넌트인 경우 Storybook 스토리(`index.stories.tsx`) 작성"
+
+  - type: textarea
+    id: references
+    attributes:
+      label: "🖼️ 참고 시안 / 스크린샷 (선택)"
+      description: "Figma 노드 링크나 참고 이미지를 첨부해 주세요."
+      placeholder: "- Figma: "
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        🌿 **작업 브랜치 예시**: `ui/#이슈번호-작업설명` 또는 `feat/#이슈번호-작업설명`

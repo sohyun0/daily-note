@@ -1,0 +1,112 @@
+[
+  {
+    "name": "✨ feat",
+    "color": "a2eeef",
+    "description": "새로운 기능 추가"
+  },
+  {
+    "name": "🐛 fix",
+    "color": "d73a49",
+    "description": "버그 수정 및 기능 개선 (PR 리뷰 반영 포함)"
+  },
+  {
+    "name": "♻️ refactor",
+    "color": "fbca04",
+    "description": "결과 변화 없이 코드 구조 개선"
+  },
+  {
+    "name": "⚡ perf",
+    "color": "d4c5f9",
+    "description": "성능 개선"
+  },
+  {
+    "name": "🎨 style",
+    "color": "f9d0c4",
+    "description": "코드 포맷팅, 세미콜론 등 로직 변경 없는 경우"
+  },
+  {
+    "name": "💄 ui",
+    "color": "e99695",
+    "description": "CSS 등 UI 디자인 변경"
+  },
+  {
+    "name": "📝 docs",
+    "color": "0075ca",
+    "description": "문서 수정 (README, 위키 등)"
+  },
+  {
+    "name": "✅ test",
+    "color": "c2e0c6",
+    "description": "테스트 코드 추가/수정"
+  },
+  {
+    "name": "🍱 asset",
+    "color": "bfd4f2",
+    "description": "이미지/폰트 등 assets 추가"
+  },
+  {
+    "name": "👷 ci",
+    "color": "1d76db",
+    "description": "CI/CD 설정 관련 변경"
+  },
+  {
+    "name": "🔧 chore",
+    "color": "fef2c0",
+    "description": "그 외 기타 수정 (빌드 스크립트 수정, 패키지 관리, 파일 삭제/이름 변경 등)"
+  },
+  {
+    "name": "🔴 priority-critical",
+    "color": "b60205",
+    "description": "긴급한 문제"
+  },
+  {
+    "name": "🟠 priority-high",
+    "color": "d93f0b",
+    "description": "높은 우선순위"
+  },
+  {
+    "name": "🟡 priority-medium",
+    "color": "fbca04",
+    "description": "보통 우선순위"
+  },
+  {
+    "name": "🟢 priority-low",
+    "color": "0e8a16",
+    "description": "낮은 우선순위"
+  },
+  {
+    "name": "🚀 deploy",
+    "color": "0052cc",
+    "description": "배포"
+  },
+  {
+    "name": "🖥️ frontend",
+    "color": "1d76db",
+    "description": "프론트엔드 관련"
+  },
+  {
+    "name": "🗄️ backend",
+    "color": "0e8a16",
+    "description": "백엔드 관련"
+  },
+  {
+    "name": "📱 mobile",
+    "color": "f9d0c4",
+    "description": "모바일 대응"
+  },
+  {
+    "name": "🔌 api",
+    "color": "bfd4f2",
+    "description": "API 연동"
+  },
+  {
+    "name": "♿ a11y",
+    "color": "7057ff",
+    "description": "접근성"
+  },
+  {
+    "name": "🌟 enhancement",
+    "color": "a2eeef",
+    "description": "기존 기능 개선"
+  }
+]

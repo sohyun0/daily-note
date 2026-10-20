@@ -31,7 +31,7 @@
 
 ## 체크리스트
 
-- [ ] 대상 브랜치가 맞다 (`feat/*` → `develop`은 Squash and merge, 배포 시 `develop` → `main`은 Merge commit)
+- [ ] 대상 브랜치 확인 (`feat/*` → `develop`은 Squash and merge, 배포 시 `develop` → `main`은 Merge commit)
 - [ ] 제목과 커밋이 `타입: #이슈번호 한글 설명` 형식이다
 - [ ] 관련 이슈(`Closed #이슈번호` 또는 `Related #이슈번호`)를 연결했다
 - [ ] `npm run lint` 통과

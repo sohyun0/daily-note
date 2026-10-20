@@ -1,0 +1,51 @@
+name: "🐛 버그 수정 (fix)"
+description: "오류, 예외 상황, 의도와 다르게 동작하는 문제를 수정할 때 사용합니다."
+title: "[FIX] "
+labels: ["🐛 fix"]
+body:
+  - type: textarea
+    id: bug
+    attributes:
+      label: "🚨 버그 현상"
+      description: "어떤 문제가 발생하고 있는지 설명해 주세요."
+      placeholder: "예) 노트 목록이 비어 있을 때 화면 진입 시 런타임 에러가 발생합니다."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: "🔄 재현 방법"
+      description: "문제가 발생하는 순서를 적어 주세요."
+      value: |
+        1. '...' 페이지/컴포넌트로 이동
+        2. '...' 버튼을 클릭하거나 특정 값을 입력
+        3. 발생한 오류 확인
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: "🎯 기대 동작 (Expected Behavior)"
+      description: "원래 어떻게 동작해야 정상인지 적어 주세요."
+    validations:
+      required: true
+
+  - type: textarea
+    id: cause
+    attributes:
+      label: "🔍 예상 원인 및 해결 방향 (선택)"
+      description: "파악된 원인이나 수정할 파일/로직이 있다면 적어 주세요."
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: "🖼️ 에러 로그 / 스크린샷 (선택)"
+      render: text
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        🌿 **작업 브랜치 예시**: `fix/#이슈번호-작업설명`

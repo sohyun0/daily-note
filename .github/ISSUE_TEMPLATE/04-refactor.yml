@@ -1,0 +1,37 @@
+name: "♻️ 리팩토링 / 성능 개선 (refactor)"
+description: "기능 변화 없이 코드 구조를 개선하거나 렌더링/번들 성능을 최적화할 때 사용합니다."
+title: "[REFACTOR] "
+labels: ["♻️ refactor"]
+body:
+  - type: textarea
+    id: background
+    attributes:
+      label: "🔧 리팩토링 대상 및 배경"
+      description: "현재 코드의 어떤 점(중복, 가독성, 폴더 경계 위반, 성능 저하 등)이 문제인지 적어 주세요."
+    validations:
+      required: true
+
+  - type: textarea
+    id: changes
+    attributes:
+      label: "🛠️ 개선 방향 (AS-IS → TO-BE)"
+      description: "현재 구조와 변경 후 구조를 비교해 적어 주세요."
+      value: |
+        - **AS-IS (현재)**: 
+        - **TO-BE (변경 후)**:
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: "✅ 체크리스트"
+      options:
+        - label: "기존 기능 동작에 영향이 없는지 확인"
+        - label: "관련 테스트(`npm test`) 및 타입체크(`npm run typecheck`) 통과 확인"
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        🌿 **작업 브랜치 예시**: `refactor/#이슈번호-작업설명` (성능 개선인 경우 `perf/#이슈번호-작업설명`)
