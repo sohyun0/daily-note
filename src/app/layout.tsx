@@ -5,6 +5,7 @@ import QueryProvider from "@/shared/providers/QueryProvider";
 import "./globals.scss";
 
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,7 +22,11 @@ export const metadata: Metadata = {
   description: "하루를 기록하는 가장 간단한 방법, 하루노트",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+interface RootLayoutProps {
+  children: ReactNode;
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="ko" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
