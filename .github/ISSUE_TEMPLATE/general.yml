@@ -1,0 +1,41 @@
+name: "📌 일반 작업 / 기타"
+description: "기존 템플릿에 맞지 않는 질문, 조사, 제안, 예외 작업을 기록할 때 사용합니다."
+title: "[GENERAL] "
+labels: []
+body:
+  - type: textarea
+    id: purpose
+    attributes:
+      label: "📋 작성 목적"
+      description: "이 Issue를 등록하는 이유를 간단히 작성해 주세요."
+      placeholder: "예) 기존 템플릿으로 분류하기 어려운 배포 설정을 조사합니다."
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: "🔎 현재 상황 / 확인 내용"
+      description: "현재 알고 있는 사실, 발생한 상황, 확인한 내용 또는 관련 링크를 작성해 주세요."
+      placeholder: |
+        - 현재 상황:
+        - 확인한 내용:
+        - 관련 링크:
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: "✅ 기대 결과 / 완료 조건"
+      description: "어떤 상태가 되면 이 Issue를 완료할 수 있는지 작성해 주세요."
+      value: |
+        - [ ]
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: "📝 참고 사항 (선택)"
+      description: "우선순위, 영향 범위, 예외 상황 등 추가로 남길 내용을 작성해 주세요."
