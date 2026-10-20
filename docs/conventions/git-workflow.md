@@ -27,10 +27,14 @@ chore/#20-storybook-config
 
 ### 병합(Merge) 방식
 
-| PR 방향              | 병합 방식            | 이유                                                                                    |
-| -------------------- | -------------------- | --------------------------------------------------------------------------------------- |
-| `feat/*` → `develop` | **Squash and merge** | 기능 단위로 커밋 히스토리를 깔끔하게 남긴다. PR 제목이 곧 커밋 메시지가 된다.           |
-| `develop` → `main`   | **Merge commit**     | Squash 병합 시 두 브랜치의 공통 조상이 끊겨 다음 배포 PR마다 충돌이 발생하는 걸 막는다. |
+| PR 방향                 | 기본 병합 방식            | 이유                                                              |
+| ----------------------- | ------------------------- | ----------------------------------------------------------------- |
+| 작업 브랜치 → `develop` | **Create a merge commit** | 작업 중 만든 목적별 커밋과 PR의 병합 지점을 모두 보존한다.        |
+| `develop` → `main`      | **Create a merge commit** | 배포 단위와 두 브랜치가 합쳐진 시점을 히스토리에 명확하게 남긴다. |
+
+- 모든 PR은 기본적으로 **Create a merge commit**으로 병합한다.
+- GitHub Ruleset에는 작업 흐름의 유연성을 위해 **Squash and merge**도 허용한다. 다만 여러 커밋을 하나로 정리해야 하는 예외 상황에서만 선택하고, PR 본문 `변경 내용`에 Squash를 선택한 이유를 적는다.
+- **Rebase and merge**는 허용하지 않는다. 브랜치에서 작업한 이력을 보존하고, 강제 푸시가 필요한 상황을 만들지 않기 위해서다.
 
 ## 2. 커밋 메시지 컨벤션
 
@@ -51,8 +55,8 @@ feat: #12 하루노트 작성 폼 컴포넌트와 유효성 검사 로직을 추
 
 ## 3. 이슈 & PR 컨벤션
 
-- **이슈 템플릿 (`.github/ISSUE_TEMPLATE/`)**: 작업 성격에 맞춰 7가지 대분류 템플릿(`feat`, `ui`, `fix`, `refactor`, `chore`, `docs`, `test`)을 사용하며, 생성 시 `labels.json` 기준 라벨이 자동으로 부여된다.
-- **PR 제목**: 커밋 메시지와 동일하게 `타입: #이슈번호 한글 설명` 형식으로 작성한다. (`Squash and merge` 시 PR 제목이 그대로 커밋 메시지가 되며, CI에서 제목도 검사한다.)
+- **이슈 템플릿 (`.github/ISSUE_TEMPLATE/`)**: 작업 성격에 맞춰 7가지 대분류 템플릿(`feat`, `ui`, `fix`, `refactor`, `chore`, `docs`, `test`)과 예외 작업용 `general` 템플릿을 사용한다. 일반 템플릿에 없는 예외 상황에서는 빈 Issue를 만들 수 있다. 템플릿의 라벨은 GitHub 저장소에 등록된 `labels.json` 기준 라벨과 일치해야 한다.
+- **PR 제목**: 커밋 메시지와 동일하게 `타입: #이슈번호 한글 설명` 형식으로 작성한다. CI에서 PR 제목도 검사한다.
 - **이슈 자동 연결**: GitHub는 PR 제목의 `#이슈번호`만으로는 이슈를 자동으로 닫아주지 않는다. 반드시 PR 본문(템플릿의 `## 관련 이슈` 영역)에 아래 키워드를 적어야 병합 시 자동 연결/종료된다.
   - 병합 시 이슈 자동 종료: `Closed #이슈번호` (또는 `Closes #10`, `Fixes #10`)
   - 단순 참조 연결(종료 안 함): `Related #이슈번호`
@@ -63,13 +67,16 @@ feat: #12 하루노트 작성 폼 컴포넌트와 유효성 검사 로직을 추
 - 모든 검증은 `develop`, `main`으로 향하는 **PR 단계(GitHub Actions CI)에서 완료**하고, 배포(Vercel)는 오직 배포만 담당한다.
 - `.github/workflows/ci.yml` 검증 항목:
   1. `commitlint`: PR 내 커밋 메시지 및 PR 제목 컨벤션 검사
-  2. `lint`: ESLint 검사 (폴더 간 의존 경계, `no-explicit-any` 등 포함)
-  3. `typecheck`: `tsc --noEmit` 타입 검사
-  4. `format`: Prettier 포맷 확인
-  5. `test`: Vitest + Storybook 브라우저 테스트
-  6. `build`: Next.js 프로덕션 빌드 확인
-  7. `build-storybook`: Storybook 정적 빌드 확인
-  8. `ci-success`: 위 7개 항목이 모두 통과했는지 확인하는 최종 게이트
+  2. `branch-flow`: `작업 브랜치 → develop`, `develop → main` 흐름과 브랜치 이름 검사
+  3. `lint`: ESLint 검사 (폴더 간 의존 경계, `no-explicit-any` 등 포함)
+  4. `typecheck`: `tsc --noEmit` 타입 검사
+  5. `format`: Prettier 포맷 확인
+  6. `test`: Vitest + Storybook 브라우저 테스트
+  7. `build`: Next.js 프로덕션 빌드 확인
+  8. `build-storybook`: Storybook 정적 빌드 확인
+  9. `ci-success`: 위 검사가 모두 통과했는지 확인하는 최종 게이트
+
+- CI는 PR에서 자동 실행된다. 초기 설정처럼 PR을 만들지 않는 상태에서도 GitHub Ruleset에 `CI 통과` 상태 검사를 등록해야 할 때는 Actions 화면에서 `workflow_dispatch`로 수동 실행할 수 있다. 수동 실행에서는 PR 전용 검사인 `commitlint`, `branch-flow`가 건너뛰어지고 나머지 품질 검사가 실행된다.
 
 ## 관련 문서
 

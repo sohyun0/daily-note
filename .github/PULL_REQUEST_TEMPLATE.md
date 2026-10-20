@@ -31,7 +31,8 @@
 
 ## 체크리스트
 
-- [ ] 대상 브랜치 확인 (`feat/*` → `develop`은 Squash and merge, 배포 시 `develop` → `main`은 Merge commit)
+- [ ] 대상 브랜치 확인 (작업 브랜치 → `develop`, 배포 시 `develop` → `main`)
+- [ ] 기본 병합 방식인 **Create a merge commit**을 선택했다 (예외적으로 Squash and merge를 선택했다면 `변경 내용`에 이유를 적었다)
 - [ ] 제목과 커밋이 `타입: #이슈번호 한글 설명` 형식이다
 - [ ] 관련 이슈(`Closed #이슈번호` 또는 `Related #이슈번호`)를 연결했다
 - [ ] `npm run lint` 통과
